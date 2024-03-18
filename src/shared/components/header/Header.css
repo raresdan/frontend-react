@@ -1,0 +1,40 @@
+.header {
+    background-color: #ffffff; /* Change this to your preferred background color */
+    padding: 20px 0;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.title {
+    font-size: 28px;
+    font-weight: bold;
+    color: #333;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+}
+
+.menu div {
+    margin-left: 20px;
+}
+
+.link {
+    text-decoration: none;
+    color: #666;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.link:hover {
+    color: #000;
+}
