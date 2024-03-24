@@ -13,7 +13,7 @@ export function DisplayDevicesPage() {
     return (
         <Layout>
             <div className='main-page-container'>
-                <div className='all-devices'>
+                <div className='all-devices' data-testid='devices-list'>
                     {allDevices.map((device) => (
                         <DeviceCard
                             givenDevice={device}

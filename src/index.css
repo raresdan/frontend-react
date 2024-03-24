@@ -5,7 +5,14 @@
 
     color-scheme: light dark;
     color: rgba(255, 255, 255, 0.87);
-    background-color: #004e9a;
+    background: rgb(2, 0, 36);
+    background: radial-gradient(
+        circle,
+        rgba(2, 0, 36, 1) 0%,
+        rgba(9, 9, 118, 1) 65%,
+        rgba(9, 9, 121, 1) 67%,
+        rgba(8, 0, 255, 1) 100%
+    );
 
     font-synthesis: none;
     text-rendering: optimizeLegibility;

@@ -63,7 +63,7 @@ function createFormEntries(props: DeviceFormProps) {
 export function DeviceForm(props: DeviceFormProps) {
     const formEntries = createFormEntries(props);
     return (
-        <div className='form'>
+        <div className='form' data-testid='device-form'>
             <form className='device-form'>
                 {formEntries.map((entry) => (
                     <FormDataEntry

@@ -2,13 +2,11 @@ import './Footer.css';
 
 export function Footer() {
     return (
-        <div className='footer'>
-            <div className='footer-content'>
-                <div className='footer-text'>
-                    Medevices
-                    <br />
-                    Created by Goia Rares Dan
-                </div>
+        <div className='footer' data-testid='footer-test-id'>
+            <div className='footer-text' data-testid='footer-inner'>
+                Medevices
+                <br />
+                Created by Goia Rares Dan
             </div>
         </div>
     );
