@@ -19,6 +19,12 @@ const Header = () => {
                             Add Device
                         </Link>
                     </div>
+
+                    <div>
+                        <Link to='/Statistics' className='link'>
+                            Statistics
+                        </Link>
+                    </div>
                 </div>
             </nav>
         </div>
