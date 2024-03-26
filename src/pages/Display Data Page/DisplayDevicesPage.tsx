@@ -23,6 +23,8 @@ export function DisplayDevicesPage() {
         if (!isAscending) allDevices.reverse();
     }, [isAscending]);
 
+    const [visibleCount, setVisibleCount] = useState<number>(4);
+
     return (
         <Layout>
             <div className='main-page-container'>
@@ -33,7 +35,7 @@ export function DisplayDevicesPage() {
                 />
 
                 <div className='all-devices' data-testid='devices-list'>
-                    {allDevices.map((device) => (
+                    {allDevices.slice(0, visibleCount).map((device) => (
                         <DeviceCard
                             givenDevice={device}
                             removeMethod={removeMethod}
@@ -41,6 +43,19 @@ export function DisplayDevicesPage() {
                         />
                     ))}
                 </div>
+                {visibleCount < allDevices.length && (
+                    <>
+                        <Button
+                            onClick={() => setVisibleCount(visibleCount + 4)}
+                            buttonText='Show More'
+                            type='button'
+                        />
+                        <p>
+                            Showing {visibleCount} out of {allDevices.length}{' '}
+                            devices
+                        </p>
+                    </>
+                )}
             </div>
         </Layout>
     );
