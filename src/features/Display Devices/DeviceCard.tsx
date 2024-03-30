@@ -2,6 +2,7 @@ import {useNavigate} from 'react-router-dom';
 import {DeviceCardPropsType} from '../../types/DeviceCardProps.types';
 
 import './DeviceCard.css';
+import axios from 'axios';
 
 export function DeviceCard({givenDevice, removeMethod}: DeviceCardPropsType) {
     let path: string = 'assets/' + givenDevice.getImage();
@@ -12,6 +13,18 @@ export function DeviceCard({givenDevice, removeMethod}: DeviceCardPropsType) {
         navigate('/editDevice/' + givenDevice.getId());
     };
 
+    const handleRemoveClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+
+        axios.delete(`http://localhost:5000/api/devices/${givenDevice.getId()}`)
+            .then(() => {
+                removeMethod(givenDevice.getId());
+            })
+            .catch(error => {
+                console.error('Error deleting device:', error);
+            });
+    };
+    
     return (
         <div
             className='card'
@@ -21,10 +34,7 @@ export function DeviceCard({givenDevice, removeMethod}: DeviceCardPropsType) {
             <button
                 className='remove-button'
                 data-testid='remove-button'
-                onClick={(e) => {
-                    e.stopPropagation();
-                    removeMethod(givenDevice.getId());
-                }}
+                onClick={handleRemoveClick}
             >
                 X
             </button>

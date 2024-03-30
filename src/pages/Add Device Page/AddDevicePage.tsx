@@ -5,6 +5,7 @@ import {DeviceForm} from '../../features/CRUD/Device Form/DeviceForm';
 import {Device} from '../../models/device';
 import {Button} from '../../shared/components/button/Button';
 import {Layout} from '../../shared/components/layout/Layout';
+import axios from 'axios';
 
 function handleOnClick(
     idInput: React.RefObject<HTMLInputElement>,
@@ -56,10 +57,17 @@ export function AddDevicePage() {
                 priceInput,
                 imageInput,
             );
-            deviceContext.addDevice(inputDevice);
-            navigate('/');
+        
+            axios.post('http://localhost:5000/api/addDevice', inputDevice)
+                .then(response => {
+                    deviceContext.addDevice(response.data);
+                    navigate('/');
+                })
+                .catch(error => {
+                    console.error('Error adding device:', error);
+                });
         } catch (error) {
-            alert(error);
+            console.error('Error handling input:', error);
         }
     };
     return (

@@ -5,6 +5,7 @@ import {DeviceForm} from '../../features/CRUD/Device Form/DeviceForm';
 import {Device} from '../../models/device';
 import {Button} from '../../shared/components/button/Button';
 import {Layout} from '../../shared/components/layout/Layout';
+import axios from 'axios';
 
 function handleOnClick(
     idInput: React.RefObject<HTMLInputElement>,
@@ -66,12 +67,21 @@ export function EditDevicePage() {
                 priceInput,
                 imageInput,
             );
-
-            console.log(inputDevice);
-            console.log(inputDevice.getId());
-            deviceContext.removeDevice(inputDevice.getId());
-            deviceContext.addDevice(inputDevice);
-            navigate('/');
+    
+            axios.put(`http://localhost:5000/api/devices/${inputDevice.getId()}`, inputDevice)
+                .then(response => {
+                    deviceContext.removeDevice(inputDevice.getId());
+                    deviceContext.addDevice(new Device(
+                        response.data.id,
+                        response.data.name,
+                        response.data.price,
+                        response.data.image
+                    ));
+                    navigate('/');
+                })
+                .catch(error => {
+                    console.error('Error updating device:', error);
+                });
         } catch (error) {
             alert(error);
         }
