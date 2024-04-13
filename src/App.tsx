@@ -13,12 +13,10 @@ import axios from 'axios';
 
 function App() {
     const [devices, setDevices] = useState<Device[]>([]);
-
     const fetchDevices = () => {
         axios.get('http://localhost:5000/api/devices')
             .then(response => {
-                Device.resetId();
-                const devices = response.data.map((device: any) => new Device(device.name, device.price, device.image));
+                const devices = response.data.map((device: any) => new Device(device.id, device.name, device.price, device.image));
                 setDevices(devices);
             })
             .catch(error => {

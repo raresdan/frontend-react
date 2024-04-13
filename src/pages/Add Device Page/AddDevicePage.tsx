@@ -8,7 +8,7 @@ import {Layout} from '../../shared/components/layout/Layout';
 import axios from 'axios';
 
 function handleOnClick(
-    idInput: React.RefObject<HTMLInputElement>,
+    idInput : React.RefObject<HTMLInputElement>,
     nameInput: React.RefObject<HTMLInputElement>,
     priceInput: React.RefObject<HTMLInputElement>,
     imageInput: React.RefObject<HTMLInputElement>,
@@ -21,20 +21,12 @@ function handleOnClick(
     ) {
         throw new Error('Null references!');
     }
-    if (
-        !idInput.current!.value ||
-        !nameInput.current!.value ||
-        !priceInput.current!.value ||
-        !imageInput.current!.value
-    ) {
-        throw new Error('All fields should be filled in!');
-    }
-
+    const deviceId = parseInt(idInput.current!.value);
     const deviceName = nameInput.current!.value;
     const devicePrice = parseInt(priceInput.current!.value);
     const deviceImage = imageInput.current!.value;
 
-    return new Device(deviceName, devicePrice, deviceImage);
+    return new Device(deviceId, deviceName, devicePrice, deviceImage);
 }
 
 export function AddDevicePage() {
@@ -50,7 +42,9 @@ export function AddDevicePage() {
 
     useEffect(() => {
         if (idInput.current) {
-            idInput.current.value = Device.getNextId().toString();
+            const maxId = Math.max(...deviceContext.devices.map(device => device.getId()));
+            const nextId = maxId + 1;
+            idInput.current.value = nextId.toString();
         }
     }, []);
 
