@@ -32,7 +32,7 @@ function createFormEntries(props: DeviceFormProps) {
             ref: props.idInput,
             placeholder: 'ID',
             defaultValue: '',
-            disabled: false,
+            disabled: true,
         },
         {
             label: 'Name',

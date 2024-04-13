@@ -17,7 +17,8 @@ function App() {
     const fetchDevices = () => {
         axios.get('http://localhost:5000/api/devices')
             .then(response => {
-                const devices = response.data.map((device: any) => new Device(device.id, device.name, device.price, device.image));
+                Device.resetId();
+                const devices = response.data.map((device: any) => new Device(device.name, device.price, device.image));
                 setDevices(devices);
             })
             .catch(error => {

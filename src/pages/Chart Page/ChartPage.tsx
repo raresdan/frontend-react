@@ -2,6 +2,8 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { useContext } from 'react';
 import { DevicesContext } from '../../contexts/DevicesContext';
 import { Device } from '../../models/device';
+import { Header } from '../../shared/components/header/Header';
+import { Footer } from '../../shared/components/footer/Footer';
 
 export function ChartPage() {
     const devicesContext = useContext(DevicesContext)!;
@@ -30,6 +32,10 @@ export function ChartPage() {
     }));
 
     return (
-        <PieChart series={[{ data: pieChartData }]} width={800} height={500} />
+        <>
+            <Header/>
+            <PieChart series={[{ data: pieChartData }]} width={800} height={500} />
+            <Footer/>
+        </>
     );
 }

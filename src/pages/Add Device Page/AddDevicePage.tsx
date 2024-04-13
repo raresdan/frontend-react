@@ -1,4 +1,4 @@
-import {useContext, useRef} from 'react';
+import {useContext, useEffect, useRef} from 'react';
 import {useNavigate} from 'react-router-dom';
 import {DevicesContext} from '../../contexts/DevicesContext';
 import {DeviceForm} from '../../features/CRUD/Device Form/DeviceForm';
@@ -30,12 +30,11 @@ function handleOnClick(
         throw new Error('All fields should be filled in!');
     }
 
-    const deviceID = parseInt(idInput.current!.value);
     const deviceName = nameInput.current!.value;
     const devicePrice = parseInt(priceInput.current!.value);
     const deviceImage = imageInput.current!.value;
 
-    return new Device(deviceID, deviceName, devicePrice, deviceImage);
+    return new Device(deviceName, devicePrice, deviceImage);
 }
 
 export function AddDevicePage() {
@@ -48,6 +47,12 @@ export function AddDevicePage() {
 
     const navigate = useNavigate();
     const deviceContext = useContext(DevicesContext)!;
+
+    useEffect(() => {
+        if (idInput.current) {
+            idInput.current.value = Device.getNextId().toString();
+        }
+    }, []);
 
     const handleOnClickWrapper = () => {
         try {
