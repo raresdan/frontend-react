@@ -5,7 +5,7 @@ import './DeviceCard.css';
 import axios from 'axios';
 
 export function DeviceCard({givenDevice, removeMethod}: DeviceCardPropsType) {
-    let path: string = 'assets/' + givenDevice.getImage();
+    // let path: string = 'assets/' + givenDevice.getImage();
 
     const navigate = useNavigate();
 
@@ -41,12 +41,13 @@ export function DeviceCard({givenDevice, removeMethod}: DeviceCardPropsType) {
 
             <div className='card-info' data-testid='card-info'>
                 <div className='picture'>
-                    <img src={path} alt='device image' />
+                    <img src={givenDevice.getImage()} alt='device image' />
                 </div>
 
                 <div className='device-info'>
                     <div className='device-id'>ID: {givenDevice.getId()}</div>
                     <div className='name'>{givenDevice.getName()}</div>
+                    <div className='brand'>Brand: {givenDevice.getBrand()}</div>
                     <div className='price'>Price: {givenDevice.getPrice()}</div>
                 </div>
             </div>

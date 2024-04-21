@@ -11,12 +11,14 @@ function handleOnClick(
     idInput: React.RefObject<HTMLInputElement>,
     nameInput: React.RefObject<HTMLInputElement>,
     priceInput: React.RefObject<HTMLInputElement>,
+    brandInput: React.RefObject<HTMLInputElement>,
     imageInput: React.RefObject<HTMLInputElement>,
 ): Device {
     if (
         !idInput.current ||
         !nameInput.current ||
         !priceInput.current ||
+        !brandInput.current ||
         !imageInput.current
     ) {
         throw new Error('Null references!');
@@ -25,6 +27,7 @@ function handleOnClick(
         !idInput.current!.value ||
         !nameInput.current!.value ||
         !priceInput.current!.value ||
+        !brandInput.current!.value ||
         !imageInput.current!.value
     ) {
         throw new Error('All fields should be filled in!');
@@ -33,9 +36,10 @@ function handleOnClick(
     const deviceID = parseInt(idInput.current!.value);
     const deviceName = nameInput.current!.value;
     const devicePrice = parseInt(priceInput.current!.value);
+    const deviceBrand = brandInput.current!.value;
     const deviceImage = imageInput.current!.value;
 
-    return new Device(deviceID, deviceName, devicePrice, deviceImage);
+    return new Device(deviceID, deviceName, devicePrice, deviceBrand, deviceImage);
 }
 
 export function EditDevicePage() {
@@ -44,6 +48,7 @@ export function EditDevicePage() {
     const idInput = useRef<HTMLInputElement>(null);
     const nameInput = useRef<HTMLInputElement>(null);
     const priceInput = useRef<HTMLInputElement>(null);
+    const brandInput = useRef<HTMLInputElement>(null);
     const imageInput = useRef<HTMLInputElement>(null);
 
     const navigate = useNavigate();
@@ -65,6 +70,7 @@ export function EditDevicePage() {
                 idInput,
                 nameInput,
                 priceInput,
+                brandInput,
                 imageInput,
             );
     
@@ -75,6 +81,7 @@ export function EditDevicePage() {
                         response.data.id,
                         response.data.name,
                         response.data.price,
+                        response.data.brand,
                         response.data.image
                     ));
                     navigate('/');
@@ -93,6 +100,7 @@ export function EditDevicePage() {
                     idInput={idInput}
                     nameInput={nameInput}
                     priceInput={priceInput}
+                    brandInput={brandInput}
                     imageInput={imageInput}
                     givenDevice={givenDevice}
                 />

@@ -19,7 +19,8 @@ function setFormEntriesForDevice(
         formEntires[0].defaultValue = givenDevice.getId().toString();
         formEntires[1].defaultValue = givenDevice.getName();
         formEntires[2].defaultValue = givenDevice.getPrice().toString();
-        formEntires[3].defaultValue = givenDevice.getImage();
+        formEntires[3].defaultValue = givenDevice.getBrand();
+        formEntires[4].defaultValue = givenDevice.getImage();
     }
 
     return formEntires;
@@ -45,6 +46,13 @@ function createFormEntries(props: DeviceFormProps) {
             label: 'Price',
             ref: props.priceInput,
             placeholder: 'Price',
+            defaultValue: '',
+            disabled: false,
+        },
+        {
+            label: 'Brand',
+            ref: props.brandInput,
+            placeholder: 'Brand',
             defaultValue: '',
             disabled: false,
         },

@@ -20,7 +20,7 @@ function App() {
         const socket = io('http://localhost:5000', { transports : ['websocket'] });
         socket.on('newDevice', (newDevice: any) => {
           console.log('Received new device from server:', newDevice);
-          const device = new Device(newDevice.id, newDevice.name, newDevice.price, newDevice.image);
+          const device = new Device(newDevice.id, newDevice.name, newDevice.price, newDevice.brand, newDevice.image);
           setDevices((prevDevices) => [...prevDevices, device]);
         });
 
@@ -39,7 +39,7 @@ function App() {
     const fetchDevices = () => {
         axios.get('http://localhost:5000/api/devices')
             .then(response => {
-                const devices = response.data.map((device: any) => new Device(device.id, device.name, device.price, device.image));
+                const devices = response.data.map((device: any) => new Device(device.id, device.name, device.price, device.brand, device.image));
                 setDevices(devices);
             })
             .catch(error => {
