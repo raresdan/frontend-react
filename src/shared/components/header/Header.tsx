@@ -6,7 +6,6 @@ const Header = () => {
         <div className='header' data-testid='header-test-id'>
             <nav className='navbar'>
                 <div className='title'>Medevices</div>
-
                 <div className='menu'>
                     <div>
                         <Link to='/' className='link'>
@@ -17,6 +16,18 @@ const Header = () => {
                     <div>
                         <Link to='/addDevice' className='link'>
                             Add Device
+                        </Link>
+                    </div>
+
+                    <div>
+                        <Link to='/brands' className='link'>
+                            Show Brands
+                        </Link>
+                    </div>
+
+                    <div>
+                        <Link to='/addBrand' className='link'>
+                            Add Brand
                         </Link>
                     </div>
 

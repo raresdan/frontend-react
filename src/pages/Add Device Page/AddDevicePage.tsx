@@ -11,12 +11,14 @@ function handleOnClick(
     idInput : React.RefObject<HTMLInputElement>,
     nameInput: React.RefObject<HTMLInputElement>,
     priceInput: React.RefObject<HTMLInputElement>,
+    brandInput: React.RefObject<HTMLInputElement>,
     imageInput: React.RefObject<HTMLInputElement>,
 ): Device {
     if (
         !idInput.current ||
         !nameInput.current ||
         !priceInput.current ||
+        !brandInput.current ||
         !imageInput.current
     ) {
         throw new Error('Null references!');
@@ -24,9 +26,10 @@ function handleOnClick(
     const deviceId = parseInt(idInput.current!.value);
     const deviceName = nameInput.current!.value;
     const devicePrice = parseInt(priceInput.current!.value);
+    const deviceBrand = brandInput.current!.value;
     const deviceImage = imageInput.current!.value;
 
-    return new Device(deviceId, deviceName, devicePrice, deviceImage);
+    return new Device(deviceId, deviceName, devicePrice, deviceBrand, deviceImage);
 }
 
 export function AddDevicePage() {
@@ -35,6 +38,7 @@ export function AddDevicePage() {
     const idInput = useRef<HTMLInputElement>(null);
     const nameInput = useRef<HTMLInputElement>(null);
     const priceInput = useRef<HTMLInputElement>(null);
+    const brandInput = useRef<HTMLInputElement>(null);
     const imageInput = useRef<HTMLInputElement>(null);
 
     const navigate = useNavigate();
@@ -54,6 +58,7 @@ export function AddDevicePage() {
                 idInput,
                 nameInput,
                 priceInput,
+                brandInput,
                 imageInput,
             );
         
@@ -78,6 +83,7 @@ export function AddDevicePage() {
                     idInput={idInput}
                     nameInput={nameInput}
                     priceInput={priceInput}
+                    brandInput={brandInput}
                     imageInput={imageInput}
                 />
 

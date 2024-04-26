@@ -41,6 +41,7 @@ export function DeviceCard({givenDevice, removeMethod}: DeviceCardPropsType) {
 
             <div className='card-info' data-testid='card-info'>
                 <div className='picture'>
+                    
                     <img src={givenDevice.getImage()} alt='device image' />
                 </div>
 

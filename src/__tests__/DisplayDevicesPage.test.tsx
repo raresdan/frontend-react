@@ -4,7 +4,7 @@ import {BrowserRouter} from 'react-router-dom';
 import {expect, test, vi} from 'vitest';
 import {DevicesContextProvider} from '../contexts/DevicesContext';
 import {Device} from '../models/device';
-import {DisplayDevicesPage} from '../pages/Display Data Page/DisplayDevicesPage';
+import {DisplayDevicesPage} from '../pages/Display Devices Page/DisplayDevicesPage';
 
 test('test display devices page render', () => {
     render(
