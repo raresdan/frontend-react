@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import {createContext, useEffect, useState} from 'react';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import {DevicesContextProvider} from './contexts/DevicesContext';
 import {Device} from './models/device';
@@ -15,6 +15,10 @@ import { DisplayDevicesPage } from './pages/Display Devices Page/DisplayDevicesP
 import { DisplayBrandsPage } from './pages/Display Brands Page/DisplayBrandsPage';
 import { AddBrandPage } from './pages/Add Brand Page/AddBrandPage';
 import { EditBrandPage } from './pages/Edit Brand Page/EditBrandPage';
+import { ApiCall } from './models/apiCall';
+
+
+export const ServerStatusContext = createContext<boolean>(true);
 
 function App() {
     const [devices, setDevices] = useState<Device[]>([]);
@@ -31,6 +35,14 @@ function App() {
           setDevices((prevDevices) => [...prevDevices, device]);
         });
 
+        socket.on('connect_error', () => {
+            setIsServerOnline(false);
+        });
+
+        return () => {
+          socket.close();
+        }
+
       }, []);
     
       useEffect(() => {
@@ -43,14 +55,19 @@ function App() {
         };
       }, []);
 
-    const fetchDevices = () => {
+    const fetchDevices = async () => {
         axios.get('http://localhost:5000/api/devices')
             .then(response => {
                 const devices = response.data.map((device: any) => new Device(device.id, device.name, device.price, device.brand, device.image));
                 setDevices(devices);
+                localStorage.setItem('devices', JSON.stringify(devices));
+                setIsServerOnline(true);
             })
             .catch(error => {
                 console.error('Error fetching devices:', error);
+                const storedDevices = JSON.parse(localStorage.getItem('devices') || '[]');
+                const devices = storedDevices.map((device: any) => new Device(device.id, device.name, device.price, device.brand, device.image));
+                setDevices(devices);
                 setIsServerOnline(false);
             });
     }
@@ -71,7 +88,7 @@ function App() {
     useEffect(() => {
         fetchDevices();
         fetchBrands();
-    }, []);
+    }, [isServerOnline]);
 
     console.log('Devices:', devices);
     console.log('Brands:', brands);
@@ -96,12 +113,29 @@ function App() {
         );
     }
 
+    useEffect(() => {
+        if (isOnline && isServerOnline) {
+            const pendingApiCalls = JSON.parse(localStorage.getItem('pendingApiCalls') || '[]');
+            pendingApiCalls.forEach((apiCall: ApiCall) => {
+                axios({
+                    method: apiCall.method,
+                    url: apiCall.url,
+                    data: apiCall.data
+                })
+                .then(response => {
+                    console.log('API call successful:', apiCall.method, response.data);
+                })
+                .catch(error => {
+                    console.error('Error executing API call:', error);
+                });
+            });
+            localStorage.removeItem('pendingApiCalls');
+            setDevices([]);
+        }
+    }, [isOnline, isServerOnline]);
+
     if (!isOnline) {
         return <Alert severity="warning">You are currently offline. Please check your internet connection.</Alert>;
-      }
-    
-    if (!isServerOnline) {
-        return <Alert severity="warning">The server is currently down. Please try again later.</Alert>;
       }
 
     return (
@@ -109,19 +143,21 @@ function App() {
             deviceContext={{ devices, addDevice, removeDevice }}
         >
             <BrandContextProvider brandContext={{ brands, addBrand, removeBrand }}>
-                <BrowserRouter>
-                    <Routes>
-                        <Route path='/' element={<DisplayDevicesPage />} />
-                        <Route path='/addDevice' element={<AddDevicePage />} />
-                        <Route path='/editDevice/:deviceId'element={<EditDevicePage />}/>
+                <ServerStatusContext.Provider value={isServerOnline}>
+                    <BrowserRouter>
+                        <Routes>
+                            <Route path='/' element={<DisplayDevicesPage />} />
+                            <Route path='/addDevice' element={<AddDevicePage />} />
+                            <Route path='/editDevice/:deviceId'element={<EditDevicePage />}/>
 
-                        <Route path='/brands' element={<DisplayBrandsPage/>} />
-                        <Route path='/addBrand' element={<AddBrandPage />} />
-                        <Route path='/editBrand/:brandId' element={<EditBrandPage />} />
+                            <Route path='/brands' element={<DisplayBrandsPage/>} />
+                            <Route path='/addBrand' element={<AddBrandPage />} />
+                            <Route path='/editBrand/:brandId' element={<EditBrandPage />} />
 
-                        <Route path='/statistics' element={<ChartPage />} />
-                    </Routes>
-                </BrowserRouter>
+                            <Route path='/statistics' element={<ChartPage />} />
+                        </Routes>
+                    </BrowserRouter>
+                </ServerStatusContext.Provider>
             </BrandContextProvider>
         </DevicesContextProvider>
     );

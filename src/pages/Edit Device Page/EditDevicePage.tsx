@@ -6,6 +6,8 @@ import {Device} from '../../models/device';
 import {Button} from '../../shared/components/button/Button';
 import {Layout} from '../../shared/components/layout/Layout';
 import axios from 'axios';
+import React from 'react';
+import { ServerStatusContext } from '../../App';
 
 function handleOnClick(
     idInput: React.RefObject<HTMLInputElement>,
@@ -53,6 +55,7 @@ export function EditDevicePage() {
 
     const navigate = useNavigate();
     const deviceContext = useContext(DevicesContext)!;
+    const isServerOnline = React.useContext(ServerStatusContext);
 
     const {deviceId} = useParams();
     if (!deviceId) {
@@ -73,22 +76,35 @@ export function EditDevicePage() {
                 brandInput,
                 imageInput,
             );
-    
-            axios.put(`http://localhost:5000/api/devices/${inputDevice.getId()}`, inputDevice)
-                .then(response => {
-                    deviceContext.removeDevice(inputDevice.getId());
-                    deviceContext.addDevice(new Device(
-                        response.data.id,
-                        response.data.name,
-                        response.data.price,
-                        response.data.brand,
-                        response.data.image
-                    ));
-                    navigate('/');
-                })
-                .catch(error => {
-                    console.error('Error updating device:', error);
+            if (isServerOnline)
+                {axios.put(`http://localhost:5000/api/devices/${inputDevice.getId()}`, inputDevice)
+                    .then(response => {
+                        deviceContext.removeDevice(inputDevice.getId());
+                        deviceContext.addDevice(new Device(
+                            response.data.id,
+                            response.data.name,
+                            response.data.price,
+                            response.data.brand,
+                            response.data.image
+                        ));
+                        navigate('/');
+                    })
+                    .catch(error => {
+                        console.error('Error updating device:', error);
+                    });}
+            else{
+                deviceContext.removeDevice(inputDevice.getId());
+                deviceContext.addDevice(inputDevice);
+
+                const pendingApiCalls = JSON.parse(localStorage.getItem('pendingApiCalls') || '[]');
+                pendingApiCalls.push({
+                    method: 'PUT',
+                    url: `http://localhost:5000/api/devices/${inputDevice.getId()}`,
+                    data: inputDevice
                 });
+                localStorage.setItem('pendingApiCalls', JSON.stringify(pendingApiCalls));
+                navigate('/');
+            }
         } catch (error) {
             alert(error);
         }

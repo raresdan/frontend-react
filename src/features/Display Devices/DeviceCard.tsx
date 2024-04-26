@@ -3,10 +3,12 @@ import {DeviceCardPropsType} from '../../types/DeviceCardProps.types';
 
 import './DeviceCard.css';
 import axios from 'axios';
+import React from 'react';
+import { ServerStatusContext } from '../../App';
 
 export function DeviceCard({givenDevice, removeMethod}: DeviceCardPropsType) {
     // let path: string = 'assets/' + givenDevice.getImage();
-
+    const isServerOnline = React.useContext(ServerStatusContext);
     const navigate = useNavigate();
 
     const handleCardOnClick = () => {
@@ -16,13 +18,24 @@ export function DeviceCard({givenDevice, removeMethod}: DeviceCardPropsType) {
     const handleRemoveClick = (e: React.MouseEvent) => {
         e.stopPropagation();
 
-        axios.delete(`http://localhost:5000/api/devices/${givenDevice.getId()}`)
-            .then(() => {
-                removeMethod(givenDevice.getId());
-            })
-            .catch(error => {
-                console.error('Error deleting device:', error);
+        if (isServerOnline) {
+            axios.delete(`http://localhost:5000/api/devices/${givenDevice.getId()}`)
+                .then(() => {
+                    removeMethod(givenDevice.getId());
+                })
+                .catch(error => {
+                    console.error('Error deleting device:', error);
+                });
+        } else {
+            removeMethod(givenDevice.getId());
+
+            const pendingApiCalls = JSON.parse(localStorage.getItem('pendingApiCalls') || '[]');
+            pendingApiCalls.push({
+                method: 'DELETE',
+                url: `http://localhost:5000/api/devices/${givenDevice.getId()}`,
             });
+            localStorage.setItem('pendingApiCalls', JSON.stringify(pendingApiCalls));
+        }
     };
     
     return (

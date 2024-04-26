@@ -4,7 +4,6 @@ import {DeviceCard} from '../../features/Display Devices/DeviceCard';
 import {Device} from '../../models/device';
 import {Button} from '../../shared/components/button/Button';
 import {Layout} from '../../shared/components/layout/Layout';
-
 import './DisplayDevicesPage.css';
 
 export function DisplayDevicesPage() {
@@ -14,6 +13,7 @@ export function DisplayDevicesPage() {
     let [isAscendingById, setIsAscendingById] = useState<boolean>(true);
 
     const devicesContext = useContext(DevicesContext)!;
+
     let allDevices: Device[] = devicesContext.devices;
     const removeMethod = devicesContext.removeDevice;
 

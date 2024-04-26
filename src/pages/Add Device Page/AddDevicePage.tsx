@@ -6,6 +6,8 @@ import {Device} from '../../models/device';
 import {Button} from '../../shared/components/button/Button';
 import {Layout} from '../../shared/components/layout/Layout';
 import axios from 'axios';
+import React from 'react';
+import { ServerStatusContext } from '../../App';
 
 function handleOnClick(
     idInput : React.RefObject<HTMLInputElement>,
@@ -43,6 +45,7 @@ export function AddDevicePage() {
 
     const navigate = useNavigate();
     const deviceContext = useContext(DevicesContext)!;
+    const isServerOnline = React.useContext(ServerStatusContext);
 
     useEffect(() => {
         if (idInput.current) {
@@ -61,15 +64,27 @@ export function AddDevicePage() {
                 brandInput,
                 imageInput,
             );
-        
-            axios.post('http://localhost:5000/api/addDevice', inputDevice)
+            
+            if(isServerOnline){
+                axios.post('http://localhost:5000/api/addDevice', inputDevice)
                 .then(response => {
                     deviceContext.addDevice(response.data);
                     navigate('/');
                 })
                 .catch(error => {
                     console.error('Error adding device:', error);
+                });}
+            else{
+                deviceContext.addDevice(inputDevice);
+                const pendingApiCalls = JSON.parse(localStorage.getItem('pendingApiCalls') || '[]');
+                pendingApiCalls.push({
+                    method: 'POST',
+                    url: 'http://localhost:5000/api/addDevice',
+                    data: inputDevice
                 });
+                localStorage.setItem('pendingApiCalls', JSON.stringify(pendingApiCalls));
+                navigate('/');
+            }
         } catch (error) {
             console.error('Error handling input:', error);
         }
