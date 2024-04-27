@@ -27,7 +27,7 @@ function App() {
     const [isOnline, setIsOnline] = useState(navigator.onLine);
     const [isServerOnline, setIsServerOnline] = useState(true);
 
-    const [page, setPage] = useState(0);
+    const page = 0;
 
     useEffect(() => {
         const socket = io('http://localhost:5000', { transports : ['websocket'] });
