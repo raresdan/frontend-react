@@ -1,16 +1,15 @@
 .button {
-    padding: 10px 20px;
-    font-size: 16px;
+    padding: 12px 24px;
+    font-size: 18px;
     font-weight: bold;
     color: #fff;
     background-color: darkblue;
     border: none;
-    border-radius: 6px;
+    border-radius: 8px;
     cursor: pointer;
-    transition:
-        background-color 0.3s,
-        transform 0.2s;
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
     margin-bottom: 10px;
+    outline: none;
 }
 
 .button:hover {
@@ -19,7 +18,7 @@
 
 .button:active {
     transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .button.primary {

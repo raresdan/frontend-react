@@ -5,6 +5,8 @@ import {Device} from '../../models/device';
 import {Button} from '../../shared/components/button/Button';
 import {Layout} from '../../shared/components/layout/Layout';
 import './DisplayDevicesPage.css';
+import React from 'react';
+import axios from 'axios';
 
 export function DisplayDevicesPage() {
     document.title = 'Display Devices';
@@ -29,7 +31,64 @@ export function DisplayDevicesPage() {
         if (!isAscendingById) allDevices.reverse();
     }, [isAscendingById]);
 
-    const [visibleCount, setVisibleCount] = useState<number>(4);
+    const [page, setPage] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollBottom = document.documentElement.scrollHeight - (window.innerHeight + window.scrollY);
+            if (scrollBottom < 100 && !isLoading) { 
+                loadMoreData();
+            }
+        };
+    
+        const debounce = (func: any, delay: number) => {
+            let timer: ReturnType<typeof setTimeout>;
+            return function (this: any) {
+                const context = this;
+                const args = arguments;
+                clearTimeout(timer);
+                timer = setTimeout(() => func.apply(context, args), delay);
+            };
+        };
+    
+        const debouncedScrollHandler = debounce(handleScroll, 1000);
+    
+        window.addEventListener('scroll', debouncedScrollHandler);
+        return () => window.removeEventListener('scroll', debouncedScrollHandler);
+    }, [isLoading]);
+    
+    const [fetchedDevicesIds, setFetchedDevicesIds] = React.useState<number[]>([]);
+
+    const loadMoreData = async () => {
+        setIsLoading(true);
+        try {
+            const nextPage = page + 1;
+
+            axios.get(`http://localhost:5000/api/devices?page=${nextPage}`)
+                .then((response) => {
+                    console.log('Next page of cars fetched:', response.data);
+                    const newDevices = response.data.map((deviceData: any) => new Device(deviceData.id, deviceData.name, deviceData.price, deviceData.brand, deviceData.image));
+
+                    const filteredNewDevices = newDevices.filter((device: Device) => !fetchedDevicesIds.includes(device.getId()));
+
+                    setFetchedDevicesIds([...fetchedDevicesIds, ...filteredNewDevices.map((device: Device) => device.getId())]);
+                    filteredNewDevices.forEach((device: Device) => {
+                        devicesContext.addDevice(device);
+                    });
+                    
+                    setPage(nextPage);
+                })
+                .catch((error) => {
+                    console.error('Error fetching next page of cars:', error);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
+        } catch (error) {
+          console.error('Error fetching next page of cars:', error);
+        }
+      };
 
     return (
         <Layout>
@@ -49,7 +108,7 @@ export function DisplayDevicesPage() {
                 />
 
                 <div className='all-devices' data-testid='devices-list'>
-                    {allDevices.slice(0, visibleCount).map((device) => (
+                {allDevices.map((device) => (
                         <DeviceCard
                             givenDevice={device}
                             removeMethod={removeMethod}
@@ -57,19 +116,6 @@ export function DisplayDevicesPage() {
                         />
                     ))}
                 </div>
-                {visibleCount < allDevices.length && (
-                    <>
-                        <Button
-                            onClick={() => setVisibleCount(visibleCount + 4)}
-                            buttonText='Show More'
-                            type='button'
-                        />
-                        <p>
-                            Showing {visibleCount} out of {allDevices.length}{' '}
-                            devices
-                        </p>
-                    </>
-                )}
             </div>
         </Layout>
     );

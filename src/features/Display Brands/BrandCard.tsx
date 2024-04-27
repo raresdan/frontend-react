@@ -2,14 +2,29 @@ import { useNavigate } from "react-router-dom";
 import { BrandCardPropsType } from "../../types/BrandCardProps.types";
 import axios from "axios";
 import './BrandCard.css';
+import { useContext, useEffect, useState } from "react";
+import { DevicesContext } from "../../contexts/DevicesContext";
 
 export function BrandCard({givenBrand, removeMethod}: BrandCardPropsType) {
 
     const navigate = useNavigate();
 
+    const devices = useContext(DevicesContext);
+    const [deviceCount, setDeviceCount] = useState(0);
+    useEffect(() => {
+        axios.get(`http://localhost:5000/api/brands/${givenBrand.getName()}`)
+            .then(response => {
+                setDeviceCount(response.data.length);
+            })
+            .catch(error => {
+                console.error('Error fetching devices:', error);
+            });
+    }, [givenBrand, devices]);
+
     const handleCardOnClick = () => {
         navigate('/editBrand/' + givenBrand.getId());
     };
+
     const handleRemoveClick = (e: React.MouseEvent) => {
         e.stopPropagation();
         axios.delete(`http://localhost:5000/api/brands/${givenBrand.getId()}`)
@@ -35,6 +50,7 @@ export function BrandCard({givenBrand, removeMethod}: BrandCardPropsType) {
                 <div className='brand-info'>
                     <div className='brand-id'>ID: {givenBrand.getId()}</div>
                     <div className='name'>{givenBrand.getName()}</div>
+                    <div className='device-count'>Devices: {deviceCount}</div>
                 </div>
             </div>
         </div>

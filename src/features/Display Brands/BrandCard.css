@@ -23,7 +23,8 @@
 }
 
 .brand-id,
-.name {
+.name, 
+.device-count {
     margin: 0;
     font-size: 16px; /* Adjust font size as needed */
 }

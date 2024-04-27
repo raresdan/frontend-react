@@ -27,12 +27,16 @@ function App() {
     const [isOnline, setIsOnline] = useState(navigator.onLine);
     const [isServerOnline, setIsServerOnline] = useState(true);
 
+    const [page, setPage] = useState(0);
+
     useEffect(() => {
         const socket = io('http://localhost:5000', { transports : ['websocket'] });
         socket.on('newDevice', (newDevice: any) => {
           console.log('Received new device from server:', newDevice);
-          const device = new Device(newDevice.id, newDevice.name, newDevice.price, newDevice.brand, newDevice.image);
-          setDevices((prevDevices) => [...prevDevices, device]);
+        //   Adding the device only to the database, the context will be updated by the fetchDevices function 
+        //   when the coresponing API call is made for its page
+        //   const device = new Device(newDevice.id, newDevice.name, newDevice.price, newDevice.brand, newDevice.image);
+        //   setDevices((prevDevices) => [...prevDevices, device]);
         });
 
         socket.on('connect_error', () => {
@@ -56,10 +60,13 @@ function App() {
       }, []);
 
     const fetchDevices = async () => {
-        axios.get('http://localhost:5000/api/devices')
+        axios.get(`http://localhost:5000/api/devices?page=${page}`)
             .then(response => {
                 const devices = response.data.map((device: any) => new Device(device.id, device.name, device.price, device.brand, device.image));
-                setDevices(devices);
+                if (page === 0)
+                    {setDevices(devices);}
+                else
+                    {setDevices(prevDevices => [...prevDevices, ...devices]);}
                 localStorage.setItem('devices', JSON.stringify(devices));
                 setIsServerOnline(true);
             })
@@ -73,11 +80,14 @@ function App() {
     }
 
     const fetchBrands = () => {
-        axios.get('http://localhost:5000/api/brands')
+        axios.get(`http://localhost:5000/api/brands?page=${page}`)
             .then(response => {
                 console.log('Brands:', response.data);
                 const brands = response.data.map((brand: any) => new Brand(brand.brand_id, brand.name));
-                setBrands(brands);
+                if (page === 0)
+                    {setBrands(brands);}
+                else
+                    {setBrands(prevBrands => [...prevBrands, ...brands]);}
             })
             .catch(error => {
                 console.error('Error fetching brands:', error);
