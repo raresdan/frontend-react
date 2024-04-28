@@ -80,14 +80,11 @@ function App() {
     }
 
     const fetchBrands = () => {
-        axios.get(`http://localhost:5000/api/brands?page=${page}`)
+        axios.get("http://localhost:5000/api/brands")
             .then(response => {
                 console.log('Brands:', response.data);
                 const brands = response.data.map((brand: any) => new Brand(brand.brand_id, brand.name));
-                if (page === 0)
-                    {setBrands(brands);}
-                else
-                    {setBrands(prevBrands => [...prevBrands, ...brands]);}
+                setBrands(brands);
             })
             .catch(error => {
                 console.error('Error fetching brands:', error);
