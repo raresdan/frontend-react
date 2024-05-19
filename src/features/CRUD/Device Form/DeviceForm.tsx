@@ -1,6 +1,9 @@
+import { useContext } from 'react';
 import {Device} from '../../../models/device';
 import {DeviceFormProps} from '../../../types/DeviceFormProps.types';
 import {FormDataEntry} from '../Form Data Entry/FormDataSubmission';
+import { DevicesContext } from '../../../contexts/DevicesContext';
+import React from 'react';
 
 type FormEntryType = {
     label: string;
@@ -27,6 +30,8 @@ function setFormEntriesForDevice(
 }
 
 function createFormEntries(props: DeviceFormProps) {
+    const devicesContext = React.useContext(DevicesContext);
+    const devices = devicesContext?.devices;
     let formEntires = [
         {
             label: 'ID',
@@ -53,8 +58,8 @@ function createFormEntries(props: DeviceFormProps) {
             label: 'Brand',
             ref: props.brandInput,
             placeholder: 'Brand',
-            defaultValue: '',
-            disabled: false,
+            defaultValue: devices ? devices[0].getBrand() : '',
+            disabled: true,
         },
         {
             label: 'Image',

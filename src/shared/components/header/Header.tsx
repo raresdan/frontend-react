@@ -23,11 +23,11 @@ const Header = () => {
                         </Link>
                     </div>
 
-                    <div>
-                        <Link to='/addDevice' className='link'>
-                            Add Device
-                        </Link>
-                    </div>
+                {localStorage.getItem('username') && ( <div>
+                    <Link to='/addDevice' className='link'>
+                        Add Device
+                    </Link>
+                </div>)}
 
                     <div>
                         <Link to='/brands' className='link'>

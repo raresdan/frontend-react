@@ -1,6 +1,6 @@
 import { Button, TextField, Typography } from "@mui/material";
 import axios from "axios";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext,  useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link as RouterLink} from 'react-router-dom';
 import './LoginPage.css';
@@ -94,6 +94,11 @@ const LoginPage = () => {
     function handleRegister(): void {
       navigate('/register');
     }
+
+    function handleGoHome(): void {
+      navigate('/');
+      window.location.reload();
+    }
   
     return (
       <div className="login-page-container">
@@ -109,9 +114,7 @@ const LoginPage = () => {
               Your session will expire in: {getRemainingTime()} seconds
             </Typography>
             <Button variant="contained" onClick={logout} className='buttons'>Logout</Button>
-            <RouterLink to="/">
-              <Button className='buttons'>Back to Home</Button>
-            </RouterLink>
+            <Button className='buttons' onClick={handleGoHome}>Back to Home</Button>
           </div>
         ) : (
           <form className="login-form" onSubmit={handleSubmit}>
@@ -138,9 +141,7 @@ const LoginPage = () => {
             
             <Button variant="contained" type='submit' className="buttons">Login</Button>
             <Button variant="contained" onClick={handleRegister} className='buttons'>Register</Button>
-            <RouterLink to="/">
-              <Button className='buttons'>Back to Home</Button>
-            </RouterLink>
+            <Button className='buttons' onClick={handleGoHome}>Back to Home</Button>
           </form>
         )}
 
