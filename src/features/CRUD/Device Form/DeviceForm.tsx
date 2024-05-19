@@ -1,4 +1,3 @@
-import { useContext } from 'react';
 import {Device} from '../../../models/device';
 import {DeviceFormProps} from '../../../types/DeviceFormProps.types';
 import {FormDataEntry} from '../Form Data Entry/FormDataSubmission';
