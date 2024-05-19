@@ -76,8 +76,10 @@ export function EditDevicePage() {
                 brandInput,
                 imageInput,
             );
-            if (isServerOnline)
-                {axios.put(`http://localhost:5000/api/devices/${inputDevice.getId()}`, inputDevice)
+            if (isServerOnline){
+                // const URL = `http://localhost:5000/api/devices/${inputDevice.getId()}`;
+                const URL = `http://3.123.33.216:5000/api/devices/${inputDevice.getId()}`;
+                axios.put(URL, inputDevice)
                     .then(response => {
                         deviceContext.removeDevice(inputDevice.getId());
                         deviceContext.addDevice(new Device(
@@ -99,7 +101,7 @@ export function EditDevicePage() {
                 const pendingApiCalls = JSON.parse(localStorage.getItem('pendingApiCalls') || '[]');
                 pendingApiCalls.push({
                     method: 'PUT',
-                    url: `http://localhost:5000/api/devices/${inputDevice.getId()}`,
+                    url: URL,
                     data: inputDevice
                 });
                 localStorage.setItem('pendingApiCalls', JSON.stringify(pendingApiCalls));

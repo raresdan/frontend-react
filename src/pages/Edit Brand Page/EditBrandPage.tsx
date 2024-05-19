@@ -54,8 +54,9 @@ export function EditBrandPage() {
                 idInput,
                 nameInput,
             );
-
-            axios.put(`http://localhost:5000/api/brands/${inputBrand.getId()}`, inputBrand)
+            // const URL = `http://localhost:5000/api/brands/${inputBrand.getId()}`;
+            const URL = `http://3.123.33.216:5000/api/brands/${inputBrand.getId()}`;
+            axios.put(URL, inputBrand)
                 .then(response => {
                     brandContext.removeBrand(response.data);
                     brandContext.addBrand(new Brand(response.data.id, response.data.name));

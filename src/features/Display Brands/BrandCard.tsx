@@ -27,7 +27,9 @@ export function BrandCard({givenBrand, removeMethod}: BrandCardPropsType) {
 
     const handleRemoveClick = (e: React.MouseEvent) => {
         e.stopPropagation();
-        axios.delete(`http://localhost:5000/api/brands/${givenBrand.getId()}`)
+        // const URL = `http://localhost:5000/api/brands/${givenBrand.getId()}`;
+        const URL = `http://3.123.33.216:5000/api/brands/${givenBrand.getId()}`;
+        axios.delete(URL)
             .then(() => {
                 removeMethod(givenBrand.getId());
             })

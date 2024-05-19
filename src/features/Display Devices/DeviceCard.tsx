@@ -23,7 +23,9 @@ export function DeviceCard({givenDevice, removeMethod}: DeviceCardPropsType) {
     const handleRemoveClick = (e: React.MouseEvent) => {
         e.stopPropagation();
             if (isServerOnline) {
-                axios.delete(`http://localhost:5000/api/devices/${givenDevice.getId()}`)
+                // const URL = `http://localhost:5000/api/devices/${givenDevice.getId()}`;
+                const URL = `http://3.123.33.216:5000/api/devices/${givenDevice.getId()}`;
+                axios.delete(URL)
                     .then(() => {
                         removeMethod(givenDevice.getId());
                     })
@@ -36,7 +38,7 @@ export function DeviceCard({givenDevice, removeMethod}: DeviceCardPropsType) {
                 const pendingApiCalls = JSON.parse(localStorage.getItem('pendingApiCalls') || '[]');
                 pendingApiCalls.push({
                     method: 'DELETE',
-                    url: `http://localhost:5000/api/devices/${givenDevice.getId()}`,
+                    url: URL,
                 });
                 localStorage.setItem('pendingApiCalls', JSON.stringify(pendingApiCalls));
             }

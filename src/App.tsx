@@ -34,7 +34,7 @@ function App() {
     const page = 0;
 
     useEffect(() => {
-        const socket = io('http://localhost:5000', { transports : ['websocket'] });
+        const socket = io('http://3.123.33.216:5000', { transports : ['websocket'] });
         socket.on('newDevice', (newDevice: any) => {
           console.log('Received new device from server:', newDevice);
         //   Adding the device only to the database, the context will be updated by the fetchDevices function 
@@ -65,7 +65,9 @@ function App() {
 
     const fetchDevices = async () => {
         const username = localStorage.getItem('username');
-        axios.get(`http://localhost:5000/api/devicesof/${username}?page=${page}`)
+        // const URL = `http://localhost:5000/api/devicesof/${username}?page=${page}`
+        const URL = `http://3.123.33.216:5000/api/devicesof/${username}?page=${page}`
+        axios.get(URL)
             .then(response => {
                 const devices = response.data.map((device: any) => new Device(device.id, device.name, device.price, device.brand, device.image));
                 if (page === 0)
@@ -85,7 +87,9 @@ function App() {
     }
 
     const fetchBrands = () => {
-        axios.get("http://localhost:5000/api/brands")
+        // const URL = 'http://localhost:5000/api/brands';
+        const URL = 'http://3.123.33.216:5000/api/brands';
+        axios.get(URL)
             .then(response => {
                 console.log('Brands:', response.data);
                 const brands = response.data.map((brand: any) => new Brand(brand.brand_id, brand.name));

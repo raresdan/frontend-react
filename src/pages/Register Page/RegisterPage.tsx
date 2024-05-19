@@ -19,7 +19,9 @@ const RegisterPage = () => {
   useEffect(() => {
     const fetchBrands = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/brandsUnregistered');
+        //const URL = 'http://localhost:5000/api/brandsUnregistered';
+        const URL = 'http://3.123.33.216:5000/api/brandsUnregistered';
+        const response = await axios.get(URL);
         const brands = response.data.map((brand: any) => new Brand(brand.brand_id, brand.name));
         setBrands(brands);
       } catch (error) {
@@ -48,7 +50,8 @@ const RegisterPage = () => {
         ...formData,
         brandName: isOtherBrand ? formData.newBrandName : formData.selectedBrand
       };
-      const response = await axios.post('http://localhost:5000/api/register', dataToSend);
+      // const response = await axios.post('http://localhost:5000/api/register', dataToSend);
+      const response = await axios.post('http://3.123.33.216:5000/api/register', dataToSend);
       console.log('Registration form submitted:', response.data);
       navigate('/login');
     } catch (error) {

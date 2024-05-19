@@ -68,7 +68,9 @@ export function AddDevicePage() {
             );
             
             if(isServerOnline){
-                axios.post('http://localhost:5000/api/addDevice', inputDevice)
+                // const URL = 'http://localhost:5000/api/addDevice';
+                const URL = 'http://3.123.33.216:5000/api/addDevice';
+                axios.post(URL, inputDevice)
                 .then(response => {
                     deviceContext.addDevice(response.data);
                     navigate('/');
@@ -81,7 +83,7 @@ export function AddDevicePage() {
                 const pendingApiCalls = JSON.parse(localStorage.getItem('pendingApiCalls') || '[]');
                 pendingApiCalls.push({
                     method: 'POST',
-                    url: 'http://localhost:5000/api/addDevice',
+                    url: URL,
                     data: inputDevice
                 });
                 localStorage.setItem('pendingApiCalls', JSON.stringify(pendingApiCalls));

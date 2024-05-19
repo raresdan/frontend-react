@@ -53,7 +53,8 @@ const LoginPage = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
       try {
-        const response = await axios.post('http://localhost:5000/api/login', formData);
+        // const response = await axios.post('http://localhost:5000/api/login', formData);
+        const response = await axios.post('http://3.123.33.216:5000/api/login', formData);
         const { token } = response.data;
   
         // Store token and expiration time in local storage
