@@ -7,12 +7,14 @@ import {Layout} from '../../shared/components/layout/Layout';
 import './DisplayDevicesPage.css';
 import React from 'react';
 import axios from 'axios';
+import { AuthContext } from '../Login Page/LoginPage';
 
 export function DisplayDevicesPage() {
     document.title = 'Display Devices';
 
     let [isAscending, setIsAscending] = useState<boolean>(true);
     let [isAscendingById, setIsAscendingById] = useState<boolean>(true);
+    const auth = useContext(AuthContext);
 
     const devicesContext = useContext(DevicesContext)!;
 
@@ -56,7 +58,7 @@ export function DisplayDevicesPage() {
     
         window.addEventListener('scroll', debouncedScrollHandler);
         return () => window.removeEventListener('scroll', debouncedScrollHandler);
-    }, [isLoading]);
+    }, [isLoading, auth]);
     
     const [fetchedDevicesIds, setFetchedDevicesIds] = React.useState<number[]>([]);
 
@@ -64,10 +66,10 @@ export function DisplayDevicesPage() {
         setIsLoading(true);
         try {
             const nextPage = page + 1;
-
-            axios.get(`http://localhost:5000/api/devices?page=${nextPage}`)
+            const username = localStorage.getItem('username');
+            axios.get(`http://localhost:5000/api/devicesof/${username}?page=${nextPage}`)
                 .then((response) => {
-                    console.log('Next page of cars fetched:', response.data);
+                    console.log('Next page of devices fetched:', response.data);
                     const newDevices = response.data.map((deviceData: any) => new Device(deviceData.id, deviceData.name, deviceData.price, deviceData.brand, deviceData.image));
 
                     const filteredNewDevices = newDevices.filter((device: Device) => !fetchedDevicesIds.includes(device.getId()));
@@ -80,13 +82,13 @@ export function DisplayDevicesPage() {
                     setPage(nextPage);
                 })
                 .catch((error) => {
-                    console.error('Error fetching next page of cars:', error);
+                    console.error('Error fetching next page of devices:', error);
                 })
                 .finally(() => {
                     setIsLoading(false);
                 });
         } catch (error) {
-          console.error('Error fetching next page of cars:', error);
+          console.error('Error fetching next page of devices:', error);
         }
       };
 

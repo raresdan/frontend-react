@@ -1,8 +1,18 @@
 import {Link} from 'react-router-dom';
 import './Header.css';
+import { Button } from '@mui/material';
 
 const Header = () => {
     return (
+    <>
+        <div className='login-register-button'>
+            <Link to='/login' className='link'>
+                <Button variant="contained">Login</Button>
+            </Link>
+            <Link to='/register' className='link'>
+                <Button variant="contained">Register</Button>
+            </Link>
+        </div>
         <div className='header' data-testid='header-test-id'>
             <nav className='navbar'>
                 <div className='title'>Medevices</div>
@@ -39,6 +49,7 @@ const Header = () => {
                 </div>
             </nav>
         </div>
+    </>
     );
 };
 

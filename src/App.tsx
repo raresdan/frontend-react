@@ -16,6 +16,9 @@ import { DisplayBrandsPage } from './pages/Display Brands Page/DisplayBrandsPage
 import { AddBrandPage } from './pages/Add Brand Page/AddBrandPage';
 import { EditBrandPage } from './pages/Edit Brand Page/EditBrandPage';
 import { ApiCall } from './models/apiCall';
+import LoginPage, { AuthContext } from './pages/Login Page/LoginPage';
+import RegisterPage from './pages/Register Page/RegisterPage';
+import React from 'react';
 
 
 export const ServerStatusContext = createContext<boolean>(true);
@@ -26,6 +29,7 @@ function App() {
 
     const [isOnline, setIsOnline] = useState(navigator.onLine);
     const [isServerOnline, setIsServerOnline] = useState(true);
+    const isAuthenticated = React.useContext(AuthContext);
 
     const page = 0;
 
@@ -60,7 +64,8 @@ function App() {
       }, []);
 
     const fetchDevices = async () => {
-        axios.get(`http://localhost:5000/api/devices?page=${page}`)
+        const username = localStorage.getItem('username');
+        axios.get(`http://localhost:5000/api/devicesof/${username}?page=${page}`)
             .then(response => {
                 const devices = response.data.map((device: any) => new Device(device.id, device.name, device.price, device.brand, device.image));
                 if (page === 0)
@@ -95,7 +100,7 @@ function App() {
     useEffect(() => {
         fetchDevices();
         fetchBrands();
-    }, [isServerOnline]);
+    }, [isServerOnline, isAuthenticated]);
 
     console.log('Devices:', devices);
     console.log('Brands:', brands);
@@ -151,19 +156,24 @@ function App() {
         >
             <BrandContextProvider brandContext={{ brands, addBrand, removeBrand }}>
                 <ServerStatusContext.Provider value={isServerOnline}>
-                    <BrowserRouter>
-                        <Routes>
-                            <Route path='/' element={<DisplayDevicesPage />} />
-                            <Route path='/addDevice' element={<AddDevicePage />} />
-                            <Route path='/editDevice/:deviceId'element={<EditDevicePage />}/>
+                    <AuthContext.Provider value={isAuthenticated}>
+                        <BrowserRouter>
+                            <Routes>
+                                <Route path='/' element={<DisplayDevicesPage />} />
+                                <Route path='/addDevice' element={<AddDevicePage />} />
+                                <Route path='/editDevice/:deviceId'element={<EditDevicePage />}/>
 
-                            <Route path='/brands' element={<DisplayBrandsPage/>} />
-                            <Route path='/addBrand' element={<AddBrandPage />} />
-                            <Route path='/editBrand/:brandId' element={<EditBrandPage />} />
+                                <Route path='/brands' element={<DisplayBrandsPage/>} />
+                                <Route path='/addBrand' element={<AddBrandPage />} />
+                                <Route path='/editBrand/:brandId' element={<EditBrandPage />} />
 
-                            <Route path='/statistics' element={<ChartPage />} />
-                        </Routes>
-                    </BrowserRouter>
+                                <Route path='/statistics' element={<ChartPage />} />
+
+                                <Route path='/register' element={<RegisterPage/>} />
+                                <Route path='/login' element={<LoginPage/>} />
+                            </Routes>
+                        </BrowserRouter>
+                    </AuthContext.Provider>
                 </ServerStatusContext.Provider>
             </BrandContextProvider>
         </DevicesContextProvider>

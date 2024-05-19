@@ -25,11 +25,13 @@ function handleOnClick(
     ) {
         throw new Error('Null references!');
     }
+
     const deviceId = parseInt(idInput.current!.value);
     const deviceName = nameInput.current!.value;
     const devicePrice = parseInt(priceInput.current!.value);
     const deviceBrand = brandInput.current!.value;
     const deviceImage = imageInput.current!.value;
+
 
     return new Device(deviceId, deviceName, devicePrice, deviceBrand, deviceImage);
 }

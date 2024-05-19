@@ -12,7 +12,7 @@ export function BrandCard({givenBrand, removeMethod}: BrandCardPropsType) {
     const devices = useContext(DevicesContext);
     const [deviceCount, setDeviceCount] = useState(0);
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/brands/${givenBrand.getName()}`)
+        axios.get(`http://localhost:5000/api/devicesfor/${givenBrand.getId()}`)
             .then(response => {
                 setDeviceCount(response.data.length);
             })
